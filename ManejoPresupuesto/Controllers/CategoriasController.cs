@@ -31,12 +31,12 @@ namespace ManejoPresupuesto.Controllers
 
         public async Task<IActionResult> Crear(Categoria categoria)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(categoria);
             }
             var usuarioId = repositorioUsuarios.ObtenerUsuarios();
-            categoria.UsuarioId= usuarioId;
+            categoria.UsuarioId = usuarioId;
             await repositorioCategorias.Crear(categoria);
             return RedirectToAction("Index");
 
@@ -45,11 +45,11 @@ namespace ManejoPresupuesto.Controllers
 
         //EDITAR
 
-        public async Task<IActionResult>Editar(int id)
+        public async Task<IActionResult> Editar(int id)
         {
             var usuarioId = repositorioUsuarios.ObtenerUsuarios();
             var categoria = await repositorioCategorias.ObtenerPorId(id, usuarioId);
-            if(categoria is null)
+            if (categoria is null)
             {
                 return RedirectToAction("NoEncontrado", "Home");
             }
@@ -57,7 +57,25 @@ namespace ManejoPresupuesto.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult>Editar(Categoria categorias)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(categorias);
+            }
+            var usuarioId = repositorioUsuarios.ObtenerUsuarios();
+            var categoria = await repositorioCategorias.ObtenerPorId(categorias.Id, usuarioId);
+            if(categoria is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            categorias.UsuarioId = usuarioId;
+
+            await repositorioCategorias.Actualizar(categorias);
+            return RedirectToAction("Index");
+        }
 
 
     }
+
 }
