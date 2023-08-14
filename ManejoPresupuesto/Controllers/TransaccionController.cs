@@ -144,5 +144,19 @@ namespace ManejoPresupuesto.Controllers
             return RedirectToAction("Index");
         }
 
+        //BORRAR
+        [HttpPost]
+        public async Task<IActionResult>Borrar(int id)
+        {
+            var usuarioId = repositorioUsuarios.ObtenerUsuarios();
+            var transaccion = await repositorioTransacciones.ObtenerPorId(id,usuarioId);
+            if(transaccion is null)
+            {
+                RedirectToAction("NoEncontrado", "Home");
+            }
+            await repositorioTransacciones.Borrar(id);
+            return RedirectToAction("Index");
+        }
+
     }
 }
